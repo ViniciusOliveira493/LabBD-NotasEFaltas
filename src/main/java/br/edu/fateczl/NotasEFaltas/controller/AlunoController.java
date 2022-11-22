@@ -52,20 +52,20 @@ public class AlunoController extends Controller<AlunoDTO> {
 	@PostMapping("/aluno")
 	public ResponseEntity<String> insert(@Valid @RequestBody AlunoDTO obj) {
 		rep.save(obj.toEntity());		
-		return ResponseEntity.ok().body(sucesso(1));
+		return respostaOK(1);
 	}
 
 	@Override
 	@PutMapping("/aluno")
 	public ResponseEntity<String> update(@Valid @RequestBody AlunoDTO obj) {
 		rep.save(obj.toEntity());		
-		return ResponseEntity.ok().body(sucesso(2));
+		return respostaOK(2);
 	}
 
 	@Override
 	@DeleteMapping("/aluno")
 	public ResponseEntity<String> delete(@Valid @RequestBody AlunoDTO obj) {
 		rep.delete(obj.toEntity());		
-		return ResponseEntity.ok().body(sucesso(3));
+		return respostaOK(3);
 	}
 }
