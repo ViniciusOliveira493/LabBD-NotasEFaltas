@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.fateczl.NotasEFaltas.controller.interfaces.Controller;
 import br.edu.fateczl.NotasEFaltas.model.dto.AlunoDTO;
+import br.edu.fateczl.NotasEFaltas.model.dto.FaltaDTO;
 import br.edu.fateczl.NotasEFaltas.model.entity.Aluno;
+import br.edu.fateczl.NotasEFaltas.model.entity.Falta;
 import br.edu.fateczl.NotasEFaltas.repository.AlunoRepository;
 
 @RestController
@@ -47,7 +49,7 @@ public class AlunoController extends Controller<AlunoDTO> {
 		Aluno al = a.orElseThrow(()-> new ResourceNotFoundException(this.notFound("o aluno", id+"")));
 		return ResponseEntity.ok().body(al.toDTO());
 	}
-
+	
 	@Override
 	@PostMapping("/aluno")
 	public ResponseEntity<String> insert(@Valid @RequestBody AlunoDTO obj) {

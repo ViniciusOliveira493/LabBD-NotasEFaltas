@@ -44,6 +44,16 @@ public class FaltaController extends Controller<FaltaDTO>{
 		return list;
 	}
 
+	@GetMapping("/alunofaltas/{id}/{disciplina}")
+	public List<FaltaDTO> findFaltas(@PathVariable(name = "id") Long id, @PathVariable(name = "disciplina") Long disc) {
+		List<Falta> f = rep.faltas(id, disc);
+		List<FaltaDTO> fal = new ArrayList<>();
+		for(Falta fa:f) {
+			fal.add(fa.toDTO());
+		}
+		return fal;
+	}
+	
 	@GetMapping("/falta/{ra}/{disciplina}/{data}")
 	public ResponseEntity<FaltaDTO> findOne(@PathVariable(name = "ra") Long ra
 											,@PathVariable(name = "disciplina") Long disciplina
