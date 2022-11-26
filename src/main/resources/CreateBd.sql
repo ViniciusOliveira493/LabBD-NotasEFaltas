@@ -113,61 +113,61 @@ BEGIN
     RETURN @qtd    
 END
 GO
---===================UDF FALTAS=======
-CREATE FUNCTION fn_buscarAluno(@ra BIGINT,@disciplina BIGINT)
+--===================SELECT FALTAS ALUNO =======
+CREATE FUNCTION fn_buscarFaltasAluno(@ra BIGINT,@disciplina BIGINT)
 RETURNS @tab TABLE(
     ra BIGINT
-    ,nome VARCHAR(100)
-    , total INT 
+    ,nome VARCHAR(80)
+    ,presenca INT
+    ,data DATE
+    ,total INT
 )
 AS
 BEGIN
-    DECLARE @colunas VARCHAR(max)
-    DECLARE @query VARCHAR(max)
-    SET @colunas = STUFF((
-        SELECT
-            distinct ','+QUOTENAME(f.data)
-        FROM tbFaltas AS f
-        FOR XML PATH('')
-        ),1,1,'')
-    print @colunas
-    SET @query = 
-        'SELECT * FROM 
-        (
-            SELECT
-                a.ra
-                , a.nome
-                , sum(presenca) AS presenca
-                , f.data
-                , dbo.fn_somarQtdFaltas(a.ra,f.codigoDisciplina) as total
-            FROM tbFaltas AS f, tbAluno AS a
-            WHERE 
-                a.ra = f.raAluno
-                AND
-                codigoDisciplina = '+'2'+'
-                AND a.ra = '+'2'+'
-            GROUP BY a.ra,a.nome,f.data,f.codigoDisciplina
-        ) girar
-        PIVOT(SUM(presenca)  FOR data IN ('+@colunas+')) emColunas
-        ORDER BY ra'
-    --INSERT INTO @tab
-    execute (@query)
-    RETURN 
+    INSERT INTO @tab
+    SELECT
+        a.ra
+        , a.nome
+        , sum(presenca) AS presenca
+        , f.data
+        , dbo.fn_somarQtdFaltas(a.ra,f.codigoDisciplina) as total
+    FROM tbFaltas AS f, tbAluno AS a
+    WHERE 
+        a.ra = f.raAluno
+        AND
+        codigoDisciplina = @disciplina
+        AND
+        a.ra = @ra
+    GROUP BY a.ra,a.nome,f.data,f.codigoDisciplina
+    RETURN
 END
---=====================
-
 GO
----============= TESTES
-SELECT
-    a.ra
-    , a.nome
-    , dbo.fn_contarFaltas(sum(presenca)) AS Presenca
-    , f.data
-FROM tbFaltas AS f, tbAluno AS a
-WHERE 
-    a.ra = f.raAluno
-    AND
-    codigoDisciplina = 2
-    AND a.ra = 2
-GROUP BY a.ra,a.nome,f.data
+--==============
+CREATE FUNCTION fn_buscarFaltasAlunos(@disciplina BIGINT)
+RETURNS @tab TABLE(
+    ra BIGINT
+    ,nome VARCHAR(80)
+    ,presenca VARCHAR(4)
+    ,data DATE
+    ,total INT
+)
+AS
+BEGIN
+    INSERT INTO @tab
+    SELECT
+        a.ra
+        , a.nome
+        , dbo.fn_contarFaltas(sum(presenca)) AS presenca
+        , f.data
+        , dbo.fn_somarQtdFaltas(a.ra,f.codigoDisciplina) as total
+    FROM tbFaltas AS f, tbAluno AS a
+    WHERE 
+        a.ra = f.raAluno
+        AND
+        codigoDisciplina = @disciplina
+    GROUP BY a.ra,a.nome,f.data,f.codigoDisciplina
+    RETURN
+END
 GO
+--==============================================
+select * from fn_buscarFaltasAlunos(2)
