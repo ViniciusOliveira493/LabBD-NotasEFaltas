@@ -17,7 +17,8 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long>{
 					+ " ,a.nome "
 				+ " FROM tbAluno AS a,tbFaltas AS f"
 				+ " WHERE a.ra = f.raAluno AND "
-				+ " f.codigoDisciplina = ?1",
+				+ " f.codigoDisciplina = ?1 "
+				+ " GROUP BY a.ra,a.nome",
 			nativeQuery = true
 	)
 	List<Aluno> findAllDisciplina(BigInteger a);
