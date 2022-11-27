@@ -1,5 +1,6 @@
 package br.edu.fateczl.NotasEFaltas.controller;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.fateczl.NotasEFaltas.controller.interfaces.Controller;
 import br.edu.fateczl.NotasEFaltas.model.dto.AlunoDTO;
+import br.edu.fateczl.NotasEFaltas.model.dto.FaltaDTO;
 import br.edu.fateczl.NotasEFaltas.model.entity.Aluno;
+import br.edu.fateczl.NotasEFaltas.model.entity.Falta;
 import br.edu.fateczl.NotasEFaltas.repository.AlunoRepository;
 
 @RestController
@@ -40,6 +43,16 @@ public class AlunoController extends Controller<AlunoDTO> {
 		return list;
 	}
 
+	@GetMapping("/alunodisciplina/{id}")
+	public List<AlunoDTO> findAllDisciplina(@PathVariable(name = "id") BigInteger id) {
+		List<Aluno> alunos = rep.findAllDisciplina(id);
+		List<AlunoDTO> list = new ArrayList<>();
+		for(Aluno a:alunos) {
+			list.add(a.toDTO());
+		}
+		return list;
+	}
+	
 	@Override
 	@GetMapping("/aluno/{id}")
 	public ResponseEntity<AlunoDTO> findOne(@PathVariable(name = "id") Long id) {
@@ -47,25 +60,25 @@ public class AlunoController extends Controller<AlunoDTO> {
 		Aluno al = a.orElseThrow(()-> new ResourceNotFoundException(this.notFound("o aluno", id+"")));
 		return ResponseEntity.ok().body(al.toDTO());
 	}
-
+	
 	@Override
 	@PostMapping("/aluno")
 	public ResponseEntity<String> insert(@Valid @RequestBody AlunoDTO obj) {
 		rep.save(obj.toEntity());		
-		return ResponseEntity.ok().body(sucesso(1));
+		return respostaOK(1);
 	}
 
 	@Override
 	@PutMapping("/aluno")
 	public ResponseEntity<String> update(@Valid @RequestBody AlunoDTO obj) {
 		rep.save(obj.toEntity());		
-		return ResponseEntity.ok().body(sucesso(2));
+		return respostaOK(2);
 	}
 
 	@Override
 	@DeleteMapping("/aluno")
 	public ResponseEntity<String> delete(@Valid @RequestBody AlunoDTO obj) {
 		rep.delete(obj.toEntity());		
-		return ResponseEntity.ok().body(sucesso(3));
+		return respostaOK(3);
 	}
 }

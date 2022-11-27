@@ -20,4 +20,8 @@ public abstract class Controller<T> implements IController<T>{
 		}
 		return "Erro ao buscar mensagem de sucesso";
 	}
+	
+	protected ResponseEntity<String> respostaOK(int acao){
+		return ResponseEntity.ok().body(this.sucesso(acao));
+	}
 }
