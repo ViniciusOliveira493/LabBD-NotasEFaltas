@@ -7,6 +7,7 @@ public class RelatorioFalta {
 	String ra;
 	String nome;
 	String total;
+	String disciplina;
 	List<DataFalta> faltas;
 	
 	public String getRa() {
@@ -37,6 +38,12 @@ public class RelatorioFalta {
 		this.faltas = faltas;
 	}
 	
+	public String getDisciplina() {
+		return disciplina;
+	}
+	public void setDisciplina(String disciplina) {
+		this.disciplina = disciplina;
+	}
 	@Override
 	public String toString() {
 		return this.ra + " | " + this.nome + " | " + this.total;

@@ -1,5 +1,6 @@
 package br.edu.fateczl.NotasEFaltas.controller;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +43,16 @@ public class AlunoController extends Controller<AlunoDTO> {
 		return list;
 	}
 
+	@GetMapping("/alunodisciplina/{id}")
+	public List<AlunoDTO> findAllDisciplina(@PathVariable(name = "id") BigInteger id) {
+		List<Aluno> alunos = rep.findAllDisciplina(id);
+		List<AlunoDTO> list = new ArrayList<>();
+		for(Aluno a:alunos) {
+			list.add(a.toDTO());
+		}
+		return list;
+	}
+	
 	@Override
 	@GetMapping("/aluno/{id}")
 	public ResponseEntity<AlunoDTO> findOne(@PathVariable(name = "id") Long id) {

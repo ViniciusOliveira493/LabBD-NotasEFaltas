@@ -41,11 +41,20 @@ public class RelatorioFaltasDAO {
 			PreparedStatement pstm = conn.prepareStatement(query);
 			pstm.setObject(1, a, java.sql.Types.BIGINT);			
 			ResultSet rs = pstm.executeQuery();
-			rs.toString();
+			
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int qtdColunas = rsmd.getColumnCount()+1;
 			String colunas[] = new String[qtdColunas];
 			
+			String query2 = " SELECT nome FROM tbDisciplina WHERE codigo = ?";
+			PreparedStatement pstm2 = conn.prepareStatement(query2);
+			pstm2.setObject(1, a, java.sql.Types.BIGINT);			
+			ResultSet rs2 = pstm2.executeQuery();
+			String disc ="";
+			while(rs2.next()) {
+				disc = rs2.getString(1);
+				break;
+			}
 			for(int i=1;i<qtdColunas;i++) {
 				colunas[i]=rsmd.getColumnName(i);
 			}			
@@ -54,6 +63,7 @@ public class RelatorioFaltasDAO {
 				r.setRa(rs.getObject("ra")+"");
 				r.setNome(rs.getString("nome"));
 				r.setTotal(rs.getInt("total"));
+				r.setDisciplina(disc);
 				List<DataFalta> list = new ArrayList<>();
 				for(int i=4;i<qtdColunas;i++) {
 					DataFalta falta = new DataFalta();
